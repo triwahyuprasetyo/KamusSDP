@@ -11,17 +11,31 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintLeft_toLeftOf="@+id/content_main"
-        app:layout_constraintTop_toTopOf="@+id/content_main"
-        android:layout_marginTop="60dp"
-        app:layout_constraintBottom_toBottomOf="@+id/content_main">
+        android:layout_height="match_parent">
 
-        <ListView
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/listKamus"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            app:layout_constraintLeft_toLeftOf="@+id/content_main"
+            app:layout_constraintTop_toTopOf="@+id/content_main"
+            android:layout_marginTop="57dp"
+            app:layout_constraintBottom_toBottomOf="@+id/content_main">
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/listKamus"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp" />
+        </LinearLayout>
+
+        <Button
+            android:text="@string/button_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonAdd" />
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
