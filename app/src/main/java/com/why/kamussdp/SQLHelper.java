@@ -29,9 +29,9 @@ public class SQLHelper extends SQLiteOpenHelper{
                 "keterangan text null);";
         Log.d("Data", "onCreate: " + sql);
         db.execSQL(sql);
-        sql = "INSERT INTO kota (id, inggris, indonesia, keterangan) VALUES (1, 'City', 'Kota', 'Daerah Pusat Pemukiman');";
+        sql = "INSERT INTO kata (id, inggris, indonesia, keterangan) VALUES (1, 'City', 'Kota', 'Daerah Pusat Pemukiman');";
         db.execSQL(sql);
-        sql = "INSERT INTO kota (id, inggris, indonesia, keterangan) VALUES (2, 'Car', 'Mobil', 'Kendaraan Roda Empat');";
+        sql = "INSERT INTO kata (id, inggris, indonesia, keterangan) VALUES (2, 'Car', 'Mobil', 'Kendaraan Roda Empat');";
         db.execSQL(sql);
 
     }

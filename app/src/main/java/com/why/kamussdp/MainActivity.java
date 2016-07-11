@@ -1,5 +1,7 @@
 package com.why.kamussdp;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String[] daftar = {"Wisata Candi", "Wisata Pantai", "Wisata Alam"};
     private ListView listKamus;
+    protected Cursor cursor;
+    SQLHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,19 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        dbHelper = new SQLHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        cursor = db.rawQuery("SELECT * FROM kata",null);
+
+        daftar = new String[cursor.getCount()];
+        cursor.moveToFirst();
+        for (int cc=0; cc < cursor.getCount(); cc++)
+        {
+            cursor.moveToPosition(cc);
+            daftar[cc] = cursor.getString(1).toString();
+        }
 
         listKamus = (ListView) findViewById(R.id.listKamus);
         listKamus.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, daftar));
