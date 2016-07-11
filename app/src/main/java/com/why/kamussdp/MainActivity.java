@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         listKamus = (ListView) findViewById(R.id.listKamus);
 
-        refreshList();
         buttonTambah = (Button) findViewById(R.id.buttonAdd);
         buttonTambah.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +54,33 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+        //refreshList();
+
+        dbHelper = new SQLHelper(this);
+
+        try {
+            dbHelper.createDataBase();
+        }
+        catch (Exception ioe) {
+            Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_LONG).show();
+        }
+        read_data();
+
+    }
+
+    public void read_data()
+    {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        cursor = db.rawQuery("SELECT * FROM kata",null);
+
+        cursor.moveToFirst();
+        for (int cc=0; cc < cursor.getCount(); cc++)
+        {
+            cursor.moveToPosition(cc);
+            Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
     public void refreshList() {
