@@ -33,7 +33,7 @@ public class AddActivity extends AppCompatActivity {
                 db.execSQL("insert into kata (inggris, indonesia, keterangan) values('" + etInggris.getText().toString() +
                         "','" + etIndonesia.getText().toString() + "','" + etKeterangan.getText().toString() + "')");
                 Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_LONG).show();
-                MainActivity.ma.RefreshList();
+                MainActivity.ma.refreshList();
                 finish();
             }
         });

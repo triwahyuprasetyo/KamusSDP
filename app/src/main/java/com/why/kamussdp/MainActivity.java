@@ -42,20 +42,10 @@ public class MainActivity extends AppCompatActivity {
         ma = this;
 
         dbHelper = new SQLHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        cursor = db.rawQuery("SELECT * FROM kata", null);
-
-        daftar = new String[cursor.getCount()];
-        cursor.moveToFirst();
-        for (int cc = 0; cc < cursor.getCount(); cc++) {
-            cursor.moveToPosition(cc);
-            daftar[cc] = cursor.getString(1).toString();
-        }
 
         listKamus = (ListView) findViewById(R.id.listKamus);
-        listKamus.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, daftar));
 
+        refreshList();
         buttonTambah = (Button) findViewById(R.id.buttonAdd);
         buttonTambah.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void RefreshList() {
+    public void refreshList() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
         cursor = db.rawQuery("SELECT * FROM kata", null);
