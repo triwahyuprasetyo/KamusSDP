@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,6 +16,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,18 +71,23 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_LONG).show();
         }
         read_data();
-
+        insertIntoDb();
     }
 
-    public void read_data()
-    {
+    private void insertIntoDb() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.execSQL("insert into kata (inggris, indonesia, keterangan) values('one','satu','angka')");
+        Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_LONG).show();
+        read_data();
+    }
+
+    public void read_data() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        cursor = db.rawQuery("SELECT * FROM kata",null);
+        cursor = db.rawQuery("SELECT * FROM kata", null);
 
         cursor.moveToFirst();
-        for (int cc=0; cc < cursor.getCount(); cc++)
-        {
+        for (int cc = 0; cc < cursor.getCount(); cc++) {
             cursor.moveToPosition(cc);
             Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_LONG).show();
         }

@@ -8,21 +8,18 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-//http://cariprogram.blogspot.com
-//nuramijaya@gmail.com
-
 public class SQLHelper extends SQLiteOpenHelper {
 
-    // Table name
-    public static final String TABLE = "kata";
-    private static final String DATABASE_NAME = "kamus.db.sqlite";
+    private static final String DATABASE_NAME = "kamus.db";
     private static final int DATABASE_VERSION = 1;
     private static String DB_PATH = "/data/data/com.why.kamussdp/databases/";
     private Context myContext;
@@ -50,7 +47,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     }
 
     public void createDataBase() throws IOException {
-        if (DataBaseisExist()) {
+        if (dataBaseIsExist()) {
             //do nothing - database already exist
             Toast.makeText(myContext, "Database Sudah Ada", Toast.LENGTH_LONG).show();
         } else {
@@ -65,15 +62,15 @@ public class SQLHelper extends SQLiteOpenHelper {
                 throw new Error("Error copying database");
             }
         }
-
     }
 
-    private boolean DataBaseisExist() {
+    private boolean dataBaseIsExist() {
         SQLiteDatabase checkDB = null;
         try {
+            Log.i("LOG INFO","Start Check DB");
             String myPath = DB_PATH + DATABASE_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
-
+            Log.i("LOG INFO","End Check DB");
         } catch (SQLiteException e) {
             //database does't exist yet.
         }
@@ -101,12 +98,12 @@ public class SQLHelper extends SQLiteOpenHelper {
         myOutput.flush();
         myOutput.close();
         myInput.close();
+        Log.i("LOG INFO", "DB Create Success");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
-
     }
 
 }
