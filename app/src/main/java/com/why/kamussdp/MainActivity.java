@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void refreshList() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM kata WHERE inggris LIKE '%"+etSearch.getText().toString()+"%'", null);
+        cursor = db.rawQuery("SELECT * FROM kata WHERE inggris LIKE '%"+etSearch.getText().toString()+"%'"
+                +" OR indonesia LIKE '%"+etSearch.getText().toString()+"%'", null);
         daftar = new String[cursor.getCount()];
         cursor.moveToFirst();
         for (int cc = 0; cc < cursor.getCount(); cc++) {
