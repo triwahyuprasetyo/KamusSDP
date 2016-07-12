@@ -1,18 +1,22 @@
 package com.why.kamussdp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,14 +27,15 @@ import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String DATABASE_NAME = "kamus.db";
     public static MainActivity ma;
+    private String DATABASE_NAME = "kamus.db";
     private String DB_PATH = "/data/data/com.why.kamussdp/databases/";
     private String[] daftar = {"Wisata Candi", "Wisata Pantai", "Wisata Alam"};
     private ListView listKamus;
     private Cursor cursor;
     private SQLHelper dbHelper;
-    private Button buttonTambah, buttonBaca, buttonBackup, buttonRestore;
+    private Button buttonTambah, buttonBaca, buttonBackup, buttonRestore, buttonSearch;
+    private EditText etSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +54,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
 
         listKamus = (ListView) findViewById(R.id.listKamus);
+        listKamus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    final int position, long id) {
+                final CharSequence[] dialogitem = {"Edit", "Delete"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Pilih?");
+                builder.setItems(dialogitem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int item) {
+                        switch (item) {
+                            case 0:
+                                break;
+                            case 1:
+                                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                db.execSQL("delete from kata where inggris = '" + daftar[position] + "'");
+                                refreshList();
+                                break;
+                        }
+                    }
+                });
+                builder.create().show();
+            }
+        });
+
         buttonTambah = (Button) findViewById(R.id.buttonAdd);
         buttonTambah.setOnClickListener(this);
         buttonBaca = (Button) findViewById(R.id.btReadData);
@@ -57,6 +86,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttonBackup.setOnClickListener(this);
         buttonRestore = (Button) findViewById(R.id.btRestore);
         buttonRestore.setOnClickListener(this);
+        buttonSearch = (Button) findViewById(R.id.buttonSearch);
+        buttonSearch.setOnClickListener(this);
+        etSearch = (EditText) findViewById(R.id.etSearch);
 
         ma = this;
         dbHelper = new SQLHelper(this);
@@ -90,13 +122,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void refreshList() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM kata", null);
+        cursor = db.rawQuery("SELECT * FROM kata WHERE inggris LIKE '%"+etSearch.getText().toString()+"%'", null);
         daftar = new String[cursor.getCount()];
         cursor.moveToFirst();
         for (int cc = 0; cc < cursor.getCount(); cc++) {
             cursor.moveToPosition(cc);
             daftar[cc] = cursor.getString(1).toString();
-            Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_SHORT).show();
         }
         listKamus.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, daftar));
         ((ArrayAdapter) listKamus.getAdapter()).notifyDataSetInvalidated();
@@ -186,6 +218,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
+        } else if (v.getId() == buttonSearch.getId()) {
+            refreshList();
         }
     }
 }
