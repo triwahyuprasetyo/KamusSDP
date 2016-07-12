@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,18 +16,14 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static MainActivity ma;
     private String[] daftar = {"Wisata Candi", "Wisata Pantai", "Wisata Alam"};
     private ListView listKamus;
     private Cursor cursor;
     private SQLHelper dbHelper;
-    private Button buttonTambah;
+    private Button buttonTambah, buttonBaca, buttonBackup, buttonRestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,33 +40,29 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        ma = this;
-
-        dbHelper = new SQLHelper(this);
 
         listKamus = (ListView) findViewById(R.id.listKamus);
-
         buttonTambah = (Button) findViewById(R.id.buttonAdd);
-        buttonTambah.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, AddActivity.class);
-                startActivity(i);
-            }
-        });
+        buttonTambah.setOnClickListener(this);
+        buttonBaca = (Button) findViewById(R.id.btReadData);
+        buttonBaca.setOnClickListener(this);
+        buttonBackup = (Button) findViewById(R.id.btBackup);
+        buttonBackup.setOnClickListener(this);
+        buttonRestore = (Button) findViewById(R.id.btRestore);
+        buttonRestore.setOnClickListener(this);
 
-        //refreshList();
-
+        ma = this;
         dbHelper = new SQLHelper(this);
-
+        dbHelper = new SQLHelper(this);
         try {
             dbHelper.createDataBase();
-        }
-        catch (Exception ioe) {
+        } catch (Exception ioe) {
             Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_LONG).show();
         }
         read_data();
         insertIntoDb();
+
+        refreshList();
     }
 
     private void insertIntoDb() {
@@ -83,9 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void read_data() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
         cursor = db.rawQuery("SELECT * FROM kata", null);
-
         cursor.moveToFirst();
         for (int cc = 0; cc < cursor.getCount(); cc++) {
             cursor.moveToPosition(cc);
@@ -95,18 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void refreshList() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
         cursor = db.rawQuery("SELECT * FROM kata", null);
-
         daftar = new String[cursor.getCount()];
         cursor.moveToFirst();
         for (int cc = 0; cc < cursor.getCount(); cc++) {
             cursor.moveToPosition(cc);
             daftar[cc] = cursor.getString(1).toString();
         }
-
         listKamus.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, daftar));
-
         ((ArrayAdapter) listKamus.getAdapter()).notifyDataSetInvalidated();
     }
 
@@ -123,12 +108,19 @@ public class MainActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == buttonTambah.getId()) {
+            Intent i = new Intent(MainActivity.this, AddActivity.class);
+            startActivity(i);
+        }
+
     }
 }
