@@ -16,9 +16,16 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String DATABASE_NAME = "kamus.db";
     public static MainActivity ma;
+    private static String DB_PATH = "/data/data/com.why.kamussdp/databases/";
     private String[] daftar = {"Wisata Candi", "Wisata Pantai", "Wisata Alam"};
     private ListView listKamus;
     private Cursor cursor;
@@ -120,6 +127,74 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (v.getId() == buttonTambah.getId()) {
             Intent i = new Intent(MainActivity.this, AddActivity.class);
             startActivity(i);
+        } else if (v.getId() == buttonBaca.getId()) {
+            read_data();
+        } else if (v.getId() == buttonBackup.getId()) {
+            try {
+                File file = new File(DB_PATH + DATABASE_NAME); //Uri.toString());
+                //FileInputStream myInput = FileInputStream(file); // myContext.getAssets().open(DB_NAME);
+                FileInputStream myInput;
+
+                myInput = new FileInputStream(file);
+
+                // Path to the just created empty db
+                String outFileName = "/sdcard/kamus.db"; // DB_PATH + DB_NAME;
+
+                //Open the empty db as the output stream
+                OutputStream myOutput = new FileOutputStream(outFileName);
+
+                //transfer bytes from the inputfile to the outputfile
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = myInput.read(buffer)) > 0) {
+                    myOutput.write(buffer, 0, length);
+                }
+
+                //Close the streams
+                myOutput.flush();
+                myOutput.close();
+                myInput.close();
+                Toast.makeText(getApplicationContext(), "Berhasil Backup", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+
+        } else if (v.getId() == buttonRestore.getId()) {
+            // TODO Auto-generated method stub
+            try {
+                File file = new File("/sdcard/kamus.db"); //Uri.toString());
+                //FileInputStream myInput = FileInputStream(file); // myContext.getAssets().open(DB_NAME);
+                FileInputStream myInput;
+
+                myInput = new FileInputStream(file);
+
+
+                // Path to the just created empty db
+                String outFileName = DB_PATH + DATABASE_NAME;
+
+                //Open the empty db as the output stream
+                OutputStream myOutput = new FileOutputStream(outFileName);
+
+                //transfer bytes from the inputfile to the outputfile
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = myInput.read(buffer)) > 0) {
+                    myOutput.write(buffer, 0, length);
+                }
+
+                //Close the streams
+                myOutput.flush();
+                myOutput.close();
+                myInput.close();
+                Toast.makeText(getApplicationContext(), "Berhasil Restore", Toast.LENGTH_LONG).show();
+                finish();
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
         }
 
     }
