@@ -49,7 +49,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     public void createDataBase() throws IOException {
         if (dataBaseIsExist()) {
             //do nothing - database already exist
-            Toast.makeText(myContext, "Database Sudah Ada", Toast.LENGTH_LONG).show();
+            Toast.makeText(myContext, "Database Sudah Ada", Toast.LENGTH_SHORT).show();
         } else {
             //By calling this method and empty database will be created into the default system path
             //of your application so we are gonna be able to overwrite that database with our database.
@@ -57,7 +57,7 @@ public class SQLHelper extends SQLiteOpenHelper {
 
             try {
                 copyDataBase();
-                Toast.makeText(myContext, "Database Berhasil Diimport Dari Assets", Toast.LENGTH_LONG).show();
+                Toast.makeText(myContext, "Database Berhasil Diimport Dari Assets", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 throw new Error("Error copying database");
             }

@@ -23,9 +23,9 @@ import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String DATABASE_NAME = "kamus.db";
+    private String DATABASE_NAME = "kamus.db";
     public static MainActivity ma;
-    private static String DB_PATH = "/data/data/com.why.kamussdp/databases/";
+    private String DB_PATH = "/data/data/com.why.kamussdp/databases/";
     private String[] daftar = {"Wisata Candi", "Wisata Pantai", "Wisata Alam"};
     private ListView listKamus;
     private Cursor cursor;
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_SHORT)
                         .setAction("Action", null).show();
             }
         });
@@ -64,19 +64,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             dbHelper.createDataBase();
         } catch (Exception ioe) {
-            Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Gagal Create Database", Toast.LENGTH_SHORT).show();
         }
-        read_data();
-        insertIntoDb();
-
+        //read_data();
+        //insertIntoDb();
         refreshList();
     }
 
     private void insertIntoDb() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.execSQL("insert into kata (inggris, indonesia, keterangan) values('one','satu','angka')");
-        Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_LONG).show();
-        read_data();
+        Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_SHORT).show();
+        //read_data();
     }
 
     public void read_data() {
@@ -85,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         cursor.moveToFirst();
         for (int cc = 0; cc < cursor.getCount(); cc++) {
             cursor.moveToPosition(cc);
-            Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (int cc = 0; cc < cursor.getCount(); cc++) {
             cursor.moveToPosition(cc);
             daftar[cc] = cursor.getString(1).toString();
+            Toast.makeText(getApplicationContext(), cursor.getString(1).toString(), Toast.LENGTH_SHORT).show();
         }
         listKamus.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, daftar));
         ((ArrayAdapter) listKamus.getAdapter()).notifyDataSetInvalidated();
@@ -134,15 +134,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 File file = new File(DB_PATH + DATABASE_NAME); //Uri.toString());
                 //FileInputStream myInput = FileInputStream(file); // myContext.getAssets().open(DB_NAME);
                 FileInputStream myInput;
-
                 myInput = new FileInputStream(file);
-
                 // Path to the just created empty db
                 String outFileName = "/sdcard/kamus.db"; // DB_PATH + DB_NAME;
-
                 //Open the empty db as the output stream
                 OutputStream myOutput = new FileOutputStream(outFileName);
-
                 //transfer bytes from the inputfile to the outputfile
                 byte[] buffer = new byte[1024];
                 int length;
@@ -154,10 +150,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 myOutput.flush();
                 myOutput.close();
                 myInput.close();
-                Toast.makeText(getApplicationContext(), "Berhasil Backup", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Berhasil Backup", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
 
@@ -167,16 +163,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 File file = new File("/sdcard/kamus.db"); //Uri.toString());
                 //FileInputStream myInput = FileInputStream(file); // myContext.getAssets().open(DB_NAME);
                 FileInputStream myInput;
-
                 myInput = new FileInputStream(file);
-
-
                 // Path to the just created empty db
                 String outFileName = DB_PATH + DATABASE_NAME;
-
                 //Open the empty db as the output stream
                 OutputStream myOutput = new FileOutputStream(outFileName);
-
                 //transfer bytes from the inputfile to the outputfile
                 byte[] buffer = new byte[1024];
                 int length;
@@ -188,14 +179,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 myOutput.flush();
                 myOutput.close();
                 myInput.close();
-                Toast.makeText(getApplicationContext(), "Berhasil Restore", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Berhasil Restore", Toast.LENGTH_SHORT).show();
                 finish();
             } catch (Exception e) {
                 // TODO Auto-generated catch block
-                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 e.printStackTrace();
             }
         }
-
     }
 }

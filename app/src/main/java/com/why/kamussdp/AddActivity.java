@@ -32,7 +32,7 @@ public class AddActivity extends AppCompatActivity {
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 db.execSQL("insert into kata (inggris, indonesia, keterangan) values('" + etInggris.getText().toString() +
                         "','" + etIndonesia.getText().toString() + "','" + etKeterangan.getText().toString() + "')");
-                Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Berhasil", Toast.LENGTH_SHORT).show();
                 MainActivity.ma.refreshList();
                 finish();
             }
